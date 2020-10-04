@@ -1,22 +1,26 @@
 import SwiftUI
 import UIKit
 
+
 @available(iOS 13.0, *)
-struct PhoneNumberTextField: UIViewRepresentable {
+/// A text field view representable struct that formats the number being
+/// inputted for the user, but preserves an unformatted underlying number
+/// in code
+public struct PhoneNumberTextField: UIViewRepresentable {
     
-    var placeholder: String
-    @Binding var text: String
-    @Binding var isEditing: Bool
+    private var placeholder: String
+    @Binding private var text: String
+    @Binding private var isEditing: Bool
     
-    var didBeginEditing: () -> Void = { }
-    var didChange: () -> Void = { }
-    var didEndEditing: () -> Void = { }
+    private var didBeginEditing: () -> Void = { }
+    private var didChange: () -> Void = { }
+    private var didEndEditing: () -> Void = { }
     
     private var font: UIFont?
     private var foregroundColor: UIColor?
     private var accentColor: UIColor?
     private var textAlignment: NSTextAlignment?
-    private var contentType: UITextContentType?
+    private var contentType: UITextContentType = .telephoneNumber
     
     private var autocorrection: UITextAutocorrectionType = .default
     private var autocapitalization: UITextAutocapitalizationType = .sentences
@@ -29,6 +33,15 @@ struct PhoneNumberTextField: UIViewRepresentable {
     
     @Environment(\.layoutDirection) private var layoutDirection: LayoutDirection
     
+    /// Initializes a new phone number text field, which perserves the underlying binding
+    /// text while formatting what the user sees on the screen
+    /// - Parameters:
+    ///   - placeholder: The formatted text to appear in the text field's placeholder
+    ///   - text: A binding to the underlying phone number `String`
+    ///   - isEditing: A binding to whether the text field is being edited
+    ///   - didBeginEditing: A funciton called when the text field starts being edited
+    ///   - didChange: A function called when the text field text changes
+    ///   - didEndEditing: A function called when the text field stops being edited
     init(_ placeholder: String,
          text: Binding<String>,
          isEditing: Binding<Bool>,
@@ -44,7 +57,7 @@ struct PhoneNumberTextField: UIViewRepresentable {
         self.didEndEditing = didEndEditing
     }
     
-    func makeUIView(context: Context) -> UITextField {
+    public func makeUIView(context: Context) -> UITextField {
         let textField = UITextField()
         
         textField.delegate = context.coordinator
@@ -56,9 +69,7 @@ struct PhoneNumberTextField: UIViewRepresentable {
         if let textAlignment = textAlignment {
             textField.textAlignment = textAlignment
         }
-        if let contentType = contentType {
-            textField.textContentType = contentType
-        }
+        textField.textContentType = contentType
         if let accentColor = accentColor {
             textField.tintColor = accentColor
         }
@@ -84,7 +95,7 @@ struct PhoneNumberTextField: UIViewRepresentable {
         return textField
     }
     
-    func updateUIView(_ uiView: UITextField, context: Context) {
+    public func updateUIView(_ uiView: UITextField, context: Context) {
         uiView.text = text.toPhoneNumber()
         if isEditing {
             uiView.becomeFirstResponder()
@@ -95,7 +106,7 @@ struct PhoneNumberTextField: UIViewRepresentable {
     
     
     
-    func makeCoordinator() -> Coordinator {
+    public func makeCoordinator() -> Coordinator {
         return Coordinator(text: $text,
                            isEditing: $isEditing,
                            didBeginEditing: didEndEditing,
@@ -103,7 +114,7 @@ struct PhoneNumberTextField: UIViewRepresentable {
                            didEndEditing: didEndEditing)
     }
     
-    final class Coordinator: NSObject, UITextFieldDelegate {
+    final public class Coordinator: NSObject, UITextFieldDelegate {
         @Binding var text: String
         @Binding var isEditing: Bool
         
@@ -119,7 +130,7 @@ struct PhoneNumberTextField: UIViewRepresentable {
             self.didEndEditing = didEndEditing
         }
         
-        func textFieldDidBeginEditing(_ textField: UITextField) {
+        public func textFieldDidBeginEditing(_ textField: UITextField) {
             DispatchQueue.main.async {
                 if !self.isEditing {
                     self.isEditing = true
@@ -137,7 +148,7 @@ struct PhoneNumberTextField: UIViewRepresentable {
             didChange()
         }
         
-        func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
+        public func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
             DispatchQueue.main.async {
                 if self.isEditing {
                     self.isEditing = false
@@ -146,7 +157,7 @@ struct PhoneNumberTextField: UIViewRepresentable {
             }
         }
         
-        func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
             isEditing = false
             return false
         }
@@ -155,14 +166,21 @@ struct PhoneNumberTextField: UIViewRepresentable {
 
 @available(iOS 13.0, *)
 extension PhoneNumberTextField {
-    func font(_ font: UIFont?) -> PhoneNumberTextField {
+    /// Modies the font of the phone number text field
+    /// - Parameter font: The placeholder and text field font
+    /// - Returns: A phone number text field with updated font
+    /// - Warning: Accepts a `UIFont` object, not a `Font` object
+    public func font(_ font: UIFont?) -> PhoneNumberTextField {
         var view = self
         view.font = font
         return view
     }
     
+    /// Modifies the text color of the phone number text field
+    /// - Parameter color: The text color
+    /// - Returns: A phone number text field with updated text color
     @available(iOS 14, *)
-    func foregroundColor(_ color: Color?) -> PhoneNumberTextField {
+    public func foregroundColor(_ color: Color?) -> PhoneNumberTextField {
         var view = self
         if let color = color {
             view.foregroundColor = UIColor(color)
@@ -170,8 +188,11 @@ extension PhoneNumberTextField {
         return view
     }
     
+    /// Modifies the cursor color of the phone number text field
+    /// - Parameter accentColor: The cursor color
+    /// - Returns: A phone number text field with updated cursor color
     @available(iOS 14, *)
-    func accentColor(_ accentColor: Color?) -> PhoneNumberTextField {
+    public func accentColor(_ accentColor: Color?) -> PhoneNumberTextField {
         var view = self
         if let accentColor = accentColor {
             view.accentColor = UIColor(accentColor)
@@ -179,19 +200,30 @@ extension PhoneNumberTextField {
         return view
     }
     
-    func foregroundColor(_ color: UIColor?) -> PhoneNumberTextField {
+    /// Modifies the text color of the phone number text field
+    /// - Parameter color: The text color
+    /// - Returns: A phone number text field with updated text color
+    /// - Warning: Accepts a `UIColor` object, not a `Color` object
+    public func foregroundColor(_ color: UIColor?) -> PhoneNumberTextField {
         var view = self
         view.foregroundColor = color
         return view
     }
     
-    func accentColor(_ accentColor: UIColor?) -> PhoneNumberTextField {
+    /// Modifies the cursor color of the phone number text field
+    /// - Parameter accentColor: The cursor color
+    /// - Returns: A phone number text field with updated cursor color
+    /// - Warning: Accepts a `UIColor` object, not a `Color` object
+    public func accentColor(_ accentColor: UIColor?) -> PhoneNumberTextField {
         var view = self
         view.accentColor = accentColor
         return view
     }
     
-    func multilineTextAlignment(_ alignment: TextAlignment) -> PhoneNumberTextField {
+    /// Modifies the text alignment of a phone number text field
+    /// - Parameter alignment: The desired alignment
+    /// - Returns: A phone number text field with updated text alignment
+    public func multilineTextAlignment(_ alignment: TextAlignment) -> PhoneNumberTextField {
         var view = self
         switch alignment {
         case .leading:
@@ -203,54 +235,20 @@ extension PhoneNumberTextField {
         }
         return view
     }
-    
-    func textContentType(_ textContentType: UITextContentType?) -> PhoneNumberTextField {
-        var view = self
-        view.contentType = textContentType
-        return view
-    }
-    
-    func disableAutocorrection(_ disable: Bool?) -> PhoneNumberTextField {
-        var view = self
-        if let disable = disable {
-            view.autocorrection = disable ? .no : .yes
-        } else {
-            view.autocorrection = .default
-        }
-        return view
-    }
-    
-    func autocapitalization(_ style: UITextAutocapitalizationType) -> PhoneNumberTextField {
-        var view = self
-        view.autocapitalization = style
-        return view
-    }
-    
-    func keyboardType(_ type: UIKeyboardType) -> PhoneNumberTextField {
-        var view = self
-        view.keyboardType = type
-        return view
-    }
-    
-    func returnKeyType(_ type: UIReturnKeyType) -> PhoneNumberTextField {
-        var view = self
-        view.returnKeyType = type
-        return view
-    }
-    
-    func isSecure(_ isSecure: Bool) -> PhoneNumberTextField {
-        var view = self
-        view.isSecure = isSecure
-        return view
-    }
-    
-    func clearsOnBeginEditing(_ shouldClear: Bool) -> PhoneNumberTextField {
+                
+    /// Modifies the clear-on-begin-editing setting of a phone number text field
+    /// - Parameter shouldClear: Whether the text field should clear on editing beginning
+    /// - Returns: A phone number text field with updated clear-on-begin-editing settings
+    public func clearsOnBeginEditing(_ shouldClear: Bool) -> PhoneNumberTextField {
         var view = self
         view.clearsOnBeginEditing = shouldClear
         return view
     }
     
-    func disabled(_ disabled: Bool) -> PhoneNumberTextField {
+    /// Modifies whether the phone number text field is disabled
+    /// - Parameter disabled: Whether the text field is disabled
+    /// - Returns: A phone number text field with updated disabled settings
+    public func disabled(_ disabled: Bool) -> PhoneNumberTextField {
         var view = self
         view.isUserInteractionEnabled = disabled
         return view
@@ -258,7 +256,7 @@ extension PhoneNumberTextField {
 }
 
 extension String {
-    func unformatPhoneNumber() -> String {
+    fileprivate func unformatPhoneNumber() -> String {
         let noSpaces = self.replacingOccurrences(of: " ", with: "")
         let noDashes = noSpaces.replacingOccurrences(of: "-", with: "")
         let noLeadingPar = noDashes.replacingOccurrences(of: "(", with: "")
@@ -267,7 +265,7 @@ extension String {
         return noTrailingPar
     }
     
-    func toPhoneNumber() -> String {
+    fileprivate func toPhoneNumber() -> String {
         if self.count >= 2 && self.prefix(1) == "+" {
             if self.prefix(2) != "+1" {
                 return self
