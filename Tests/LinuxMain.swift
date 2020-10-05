@@ -1,7 +1,7 @@
 import XCTest
 
-import PhoneNumberTextFieldTests
+import iPhoneNumberTextFieldTests
 
 var tests = [XCTestCaseEntry]()
-tests += PhoneNumberTextFieldTests.allTests()
+tests += iPhoneNumberTextFieldTests.allTests()
 XCTMain(tests)

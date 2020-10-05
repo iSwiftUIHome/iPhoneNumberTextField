@@ -1,12 +1,12 @@
 import XCTest
-@testable import PhoneNumberTextField
+@testable import iPhoneNumberTextField
 
-final class PhoneNumberTextFieldTests: XCTestCase {
+final class iPhoneNumberTextFieldTests: XCTestCase {
     func testExample() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
-//        XCTAssertEqual(PhoneNumberTextField().text, "Hello, World!")
+//        XCTAssertEqual(iPhoneNumberTextField().text, "Hello, World!")
     }
 
     static var allTests = [

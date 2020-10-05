@@ -6,7 +6,7 @@ import UIKit
 /// A text field view representable struct that formats the number being
 /// inputted for the user, but preserves an unformatted underlying number
 /// in code
-public struct PhoneNumberTextField: UIViewRepresentable {
+public struct iPhoneNumberTextField: UIViewRepresentable {
     
     private var placeholder: String
     @Binding private var text: String
@@ -165,12 +165,12 @@ public struct PhoneNumberTextField: UIViewRepresentable {
 }
 
 @available(iOS 13.0, *)
-extension PhoneNumberTextField {
+extension iPhoneNumberTextField {
     /// Modies the font of the phone number text field
     /// - Parameter font: The placeholder and text field font
     /// - Returns: A phone number text field with updated font
     /// - Warning: Accepts a `UIFont` object, not a `Font` object
-    public func font(_ font: UIFont?) -> PhoneNumberTextField {
+    public func font(_ font: UIFont?) -> iPhoneNumberTextField {
         var view = self
         view.font = font
         return view
@@ -180,7 +180,7 @@ extension PhoneNumberTextField {
     /// - Parameter color: The text color
     /// - Returns: A phone number text field with updated text color
     @available(iOS 14, *)
-    public func foregroundColor(_ color: Color?) -> PhoneNumberTextField {
+    public func foregroundColor(_ color: Color?) -> iPhoneNumberTextField {
         var view = self
         if let color = color {
             view.foregroundColor = UIColor(color)
@@ -192,7 +192,7 @@ extension PhoneNumberTextField {
     /// - Parameter accentColor: The cursor color
     /// - Returns: A phone number text field with updated cursor color
     @available(iOS 14, *)
-    public func accentColor(_ accentColor: Color?) -> PhoneNumberTextField {
+    public func accentColor(_ accentColor: Color?) -> iPhoneNumberTextField {
         var view = self
         if let accentColor = accentColor {
             view.accentColor = UIColor(accentColor)
@@ -204,7 +204,7 @@ extension PhoneNumberTextField {
     /// - Parameter color: The text color
     /// - Returns: A phone number text field with updated text color
     /// - Warning: Accepts a `UIColor` object, not a `Color` object
-    public func foregroundColor(_ color: UIColor?) -> PhoneNumberTextField {
+    public func foregroundColor(_ color: UIColor?) -> iPhoneNumberTextField {
         var view = self
         view.foregroundColor = color
         return view
@@ -214,7 +214,7 @@ extension PhoneNumberTextField {
     /// - Parameter accentColor: The cursor color
     /// - Returns: A phone number text field with updated cursor color
     /// - Warning: Accepts a `UIColor` object, not a `Color` object
-    public func accentColor(_ accentColor: UIColor?) -> PhoneNumberTextField {
+    public func accentColor(_ accentColor: UIColor?) -> iPhoneNumberTextField {
         var view = self
         view.accentColor = accentColor
         return view
@@ -223,7 +223,7 @@ extension PhoneNumberTextField {
     /// Modifies the text alignment of a phone number text field
     /// - Parameter alignment: The desired alignment
     /// - Returns: A phone number text field with updated text alignment
-    public func multilineTextAlignment(_ alignment: TextAlignment) -> PhoneNumberTextField {
+    public func multilineTextAlignment(_ alignment: TextAlignment) -> iPhoneNumberTextField {
         var view = self
         switch alignment {
         case .leading:
@@ -239,7 +239,7 @@ extension PhoneNumberTextField {
     /// Modifies the clear-on-begin-editing setting of a phone number text field
     /// - Parameter shouldClear: Whether the text field should clear on editing beginning
     /// - Returns: A phone number text field with updated clear-on-begin-editing settings
-    public func clearsOnBeginEditing(_ shouldClear: Bool) -> PhoneNumberTextField {
+    public func clearsOnBeginEditing(_ shouldClear: Bool) -> iPhoneNumberTextField {
         var view = self
         view.clearsOnBeginEditing = shouldClear
         return view
@@ -248,7 +248,7 @@ extension PhoneNumberTextField {
     /// Modifies whether the phone number text field is disabled
     /// - Parameter disabled: Whether the text field is disabled
     /// - Returns: A phone number text field with updated disabled settings
-    public func disabled(_ disabled: Bool) -> PhoneNumberTextField {
+    public func disabled(_ disabled: Bool) -> iPhoneNumberTextField {
         var view = self
         view.isUserInteractionEnabled = disabled
         return view
