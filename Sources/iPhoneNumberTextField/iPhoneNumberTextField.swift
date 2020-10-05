@@ -33,8 +33,7 @@ public struct iPhoneNumberTextField: UIViewRepresentable {
     
     @Environment(\.layoutDirection) private var layoutDirection: LayoutDirection
     
-    /// Initializes a new phone number text field, which perserves the underlying binding
-    /// text while formatting what the user sees on the screen
+    /// Initializes a new phone number text field, which formats a phone number in real time while the user is typing. The underlying `String` binding remains unformatted.
     /// - Parameters:
     ///   - placeholder: The formatted text to appear in the text field's placeholder
     ///   - text: A binding to the underlying phone number `String`
