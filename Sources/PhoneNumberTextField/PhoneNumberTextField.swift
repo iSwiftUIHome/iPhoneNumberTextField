@@ -42,7 +42,7 @@ public struct PhoneNumberTextField: UIViewRepresentable {
     ///   - didBeginEditing: A funciton called when the text field starts being edited
     ///   - didChange: A function called when the text field text changes
     ///   - didEndEditing: A function called when the text field stops being edited
-    init(_ placeholder: String,
+    public init(_ placeholder: String,
          text: Binding<String>,
          isEditing: Binding<Bool>,
          didBeginEditing: @escaping () -> Void = { },
