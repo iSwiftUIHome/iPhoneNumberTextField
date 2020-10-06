@@ -249,7 +249,7 @@ extension iPhoneNumberTextField {
     /// - Returns: A phone number text field with updated disabled settings
     public func disabled(_ disabled: Bool) -> iPhoneNumberTextField {
         var view = self
-        view.isUserInteractionEnabled = disabled
+        view.isUserInteractionEnabled = !disabled
         return view
     }
 }
