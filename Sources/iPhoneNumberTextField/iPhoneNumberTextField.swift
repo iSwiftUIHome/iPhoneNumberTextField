@@ -42,11 +42,11 @@ public struct iPhoneNumberTextField: UIViewRepresentable {
     ///   - didChange: A function called when the text field text changes
     ///   - didEndEditing: A function called when the text field stops being edited
     public init(_ placeholder: String,
-         text: Binding<String>,
-         isEditing: Binding<Bool>,
-         didBeginEditing: @escaping () -> Void = { },
-         didChange: @escaping () -> Void = { },
-         didEndEditing: @escaping () -> Void = { })
+                text: Binding<String>,
+                isEditing: Binding<Bool>,
+                didBeginEditing: @escaping () -> Void = { },
+                didChange: @escaping () -> Void = { },
+                didEndEditing: @escaping () -> Void = { })
     {
         self.placeholder = placeholder
         self._text = text
@@ -130,11 +130,14 @@ public struct iPhoneNumberTextField: UIViewRepresentable {
         }
         
         public func textFieldDidBeginEditing(_ textField: UITextField) {
-            DispatchQueue.main.async {
-                if !self.isEditing {
-                    self.isEditing = true
+            DispatchQueue.main.async { [self] in
+                if !isEditing {
+                    isEditing = true
                 }
-                self.didEndEditing()
+                if textField.clearsOnBeginEditing {
+                    text = ""
+                }
+                didBeginEditing()
             }
         }
         
@@ -169,7 +172,7 @@ extension iPhoneNumberTextField {
     /// - Parameter font: The placeholder and text field font
     /// - Returns: A phone number text field with updated font
     /// - Warning: Accepts a `UIFont` object, not a `Font` object
-    public func font(_ font: UIFont?) -> iPhoneNumberTextField {
+    public func uiFont(_ font: UIFont?) -> iPhoneNumberTextField {
         var view = self
         view.font = font
         return view
@@ -199,26 +202,6 @@ extension iPhoneNumberTextField {
         return view
     }
     
-    /// Modifies the text color of the phone number text field
-    /// - Parameter color: The text color
-    /// - Returns: A phone number text field with updated text color
-    /// - Warning: Accepts a `UIColor` object, not a `Color` object
-    public func foregroundColor(_ color: UIColor?) -> iPhoneNumberTextField {
-        var view = self
-        view.foregroundColor = color
-        return view
-    }
-    
-    /// Modifies the cursor color of the phone number text field
-    /// - Parameter accentColor: The cursor color
-    /// - Returns: A phone number text field with updated cursor color
-    /// - Warning: Accepts a `UIColor` object, not a `Color` object
-    public func accentColor(_ accentColor: UIColor?) -> iPhoneNumberTextField {
-        var view = self
-        view.accentColor = accentColor
-        return view
-    }
-    
     /// Modifies the text alignment of a phone number text field
     /// - Parameter alignment: The desired alignment
     /// - Returns: A phone number text field with updated text alignment
@@ -234,7 +217,7 @@ extension iPhoneNumberTextField {
         }
         return view
     }
-                
+    
     /// Modifies the clear-on-begin-editing setting of a phone number text field
     /// - Parameter shouldClear: Whether the text field should clear on editing beginning
     /// - Returns: A phone number text field with updated clear-on-begin-editing settings
@@ -312,7 +295,8 @@ extension String {
             
             return "(" + String(first) + ") " + String(second) + "-" + String(third)
         } else {
-            return String(self.prefix(10)).toPhoneNumber()
+            return self
+            //  return String(self.prefix(10)).toPhoneNumber()
         }
     }
 }
