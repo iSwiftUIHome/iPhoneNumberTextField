@@ -43,17 +43,11 @@ public struct iPhoneNumberTextField: UIViewRepresentable {
     ///   - didEndEditing: A function called when the text field stops being edited
     public init(_ placeholder: String,
                 text: Binding<String>,
-                isEditing: Binding<Bool>,
-                didBeginEditing: @escaping () -> Void = { },
-                didChange: @escaping () -> Void = { },
-                didEndEditing: @escaping () -> Void = { })
+                isEditing: Binding<Bool>)
     {
         self.placeholder = placeholder
         self._text = text
         self._isEditing = isEditing
-        self.didBeginEditing = didBeginEditing
-        self.didChange = didChange
-        self.didEndEditing = didEndEditing
     }
     
     public func makeUIView(context: Context) -> UITextField {
@@ -151,11 +145,11 @@ public struct iPhoneNumberTextField: UIViewRepresentable {
         }
         
         public func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
-            DispatchQueue.main.async {
-                if self.isEditing {
-                    self.isEditing = false
+            DispatchQueue.main.async { [self] in
+                if isEditing {
+                    isEditing = false
                 }
-                self.didEndEditing()
+                didEndEditing()
             }
         }
         
@@ -202,6 +196,28 @@ extension iPhoneNumberTextField {
         return view
     }
     
+    /// Modifies the text color of the phone number text field
+    /// - Parameter color: The desired text color
+    /// - Returns: An updated text field using the desired text color
+    /// - Warning: Uses UIKit's `UIColor` rather than SwiftUI's `Color`
+    @available(iOS, introduced: 13, obsoleted: 14)
+    public func foregroundColor(_ color: UIColor?) -> iPhoneNumberTextField {
+        var view = self
+        view.foregroundColor = color
+        return view
+    }
+    
+    /// Modifies the cursor color of the phone number text field
+    /// - Parameter accentColor: The desired accent color
+    /// - Returns: And updated text field using the desired accent color
+    /// - Warning: Uses UIKit's `UIColor` rather than SwiftUI's `Color`
+    @available(iOS, introduced: 13, obsoleted: 14)
+    public func accentColor(_ accentColor: UIColor?) -> iPhoneNumberTextField {
+        var view = self
+        view.accentColor = accentColor
+        return view
+    }
+    
     /// Modifies the text alignment of a phone number text field
     /// - Parameter alignment: The desired alignment
     /// - Returns: A phone number text field with updated text alignment
@@ -233,6 +249,35 @@ extension iPhoneNumberTextField {
     public func disabled(_ disabled: Bool) -> iPhoneNumberTextField {
         var view = self
         view.isUserInteractionEnabled = !disabled
+        return view
+    }
+    
+    /// Modifies the function called when text editing begins
+    /// - Parameter action: The function called when text editing begins
+    /// - Returns: An updated text field using the desired function called when text editing begins
+    public func onEditingBegan(_ action: @escaping () -> Void) -> iPhoneNumberTextField {
+        var view = self
+        view.didBeginEditing = action
+        return view
+        
+    }
+    
+    /// Modifies the function called when the user makes any changes to the text in the text field
+    /// - Parameter action: The function called when the user makes any changes to the text in the text field
+    /// - Returns: An updated text field using the desired function called when the user makes any changes to the text in the text field
+    public func onEdit(_ action: @escaping () -> Void) -> iPhoneNumberTextField {
+        var view = self
+        view.didChange = action
+        return view
+        
+    }
+    
+    /// Modifies the function called when text editing ends
+    /// - Parameter action: The function called when text editing ends
+    /// - Returns: An updated text field using the desired function called when text editing ends
+    public func onEditingEnded(_ action: @escaping () -> Void) -> iPhoneNumberTextField {
+        var view = self
+        view.didEndEditing = action
         return view
     }
 }
