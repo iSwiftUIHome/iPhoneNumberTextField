@@ -162,16 +162,17 @@ public struct iPhoneNumberTextField: UIViewRepresentable {
 
 @available(iOS 13.0, *)
 extension iPhoneNumberTextField {
-    /// Modies the font of the phone number text field
-    /// - Parameter font: The placeholder and text field font
-    /// - Returns: A phone number text field with updated font
-    /// - Warning: Accepts a `UIFont` object, not a `Font` object
-    public func uiFont(_ font: UIFont?) -> iPhoneNumberTextField {
+    /// Modifies the text field’s font from a `UIFont` object.
+    /// - Parameter font: The desired font
+    /// - Returns: An updated text field using the desired font
+    /// - Warning: Accepts a `UIFont` object rather than SwiftUI `Font`
+    /// - SeeAlso: [`UIFont`](https://developer.apple.com/documentation/uikit/uifont)
+    public func fontFromUIFont(_ font: UIFont?) -> iPhoneNumbersTextField {
         var view = self
         view.font = font
         return view
     }
-    
+
     /// Modifies the text color of the phone number text field
     /// - Parameter color: The text color
     /// - Returns: A phone number text field with updated text color
@@ -258,6 +259,12 @@ extension iPhoneNumberTextField {
         view.didEndEditing = action
         return view
     }
+    
+    /// Since Apple has not given us a way yet to parse a `Font` 🔠  object, this function must be deprecated 😔. Please use `.fontFromUIFont(_:)` instead.
+    /// - Parameter font:
+    /// - Returns:
+    @available(*, deprecated, renamed: "fontFromUIFont", message: "At this time, Apple will not let us parse a `Font` object❗️")
+    public func font(_ font: Font?) -> some View { return EmptyView() }
 }
 
 extension String {
