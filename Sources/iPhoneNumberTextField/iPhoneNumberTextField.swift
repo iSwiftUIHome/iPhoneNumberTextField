@@ -167,7 +167,7 @@ extension iPhoneNumberTextField {
     /// - Returns: An updated text field using the desired font
     /// - Warning: Accepts a `UIFont` object rather than SwiftUI `Font`
     /// - SeeAlso: [`UIFont`](https://developer.apple.com/documentation/uikit/uifont)
-    public func fontFromUIFont(_ font: UIFont?) -> iPhoneNumbersTextField {
+    public func fontFromUIFont(_ font: UIFont?) -> iPhoneNumberTextField {
         var view = self
         view.font = font
         return view
