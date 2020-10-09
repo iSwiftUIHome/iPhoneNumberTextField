@@ -1,4 +1,5 @@
 import SwiftUI
+import iColors
 import UIKit
 
 
@@ -7,7 +8,7 @@ import UIKit
 /// inputted for the user, but preserves an unformatted underlying number
 /// in code
 public struct iPhoneNumberTextField: UIViewRepresentable {
-    
+    @Environment(\.colorScheme) var colorScheme
     private var placeholder: String
     @Binding private var text: String
     @Binding private var isEditing: Bool
@@ -157,6 +158,65 @@ public struct iPhoneNumberTextField: UIViewRepresentable {
             isEditing = false
             return false
         }
+    }
+}
+
+
+@available(iOS 13.0, *)
+public extension iPhoneNumberTextField {
+    /// Easily add & change default styles.
+    /// - Returns: some View
+    func style(height: CGFloat = 58, backgroundColor: Color? = nil, accentColor: Color = Colors.DarkOceanBlue, font inputFont: UIFont? = nil, paddingLeading: CGFloat = 25, cornerRadius: CGFloat = 6, hasShadow: Bool = true) -> some View {
+        var darkMode: Bool { colorScheme == .dark }
+        
+        let cursorColor: Color = accentColor
+        let height: CGFloat = height
+        let leadingPadding: CGFloat = paddingLeading
+        
+        var backgroundGray: Double { darkMode ? 0.25 : 0.95 }
+        var backgroundColor: Color {
+            if backgroundColor != nil {
+                return backgroundColor!
+            } else {
+                return .init(white: backgroundGray)
+            }
+        }
+        
+        var shadowOpacity: Double { (isEditing && hasShadow) ? 0.5 : 0 }
+        var shadowGray: Double { darkMode ? 0.8 : 0.5 }
+        var shadowColor: Color { Color(white: shadowGray).opacity(shadowOpacity) }
+        
+        var borderColor: Color {
+            isEditing && darkMode ? .init(white: 0.6) : .clear
+        }
+        
+        var font: UIFont {
+            if inputFont != nil {
+                return inputFont!
+            } else {
+                let fontSize: CGFloat = 20
+                let systemFont = UIFont.systemFont(ofSize: fontSize, weight: .regular)
+                if let descriptor = systemFont.fontDescriptor.withDesign(.rounded) {
+                    return  UIFont(descriptor: descriptor, size: fontSize)
+                } else {
+                    return systemFont
+                }
+            }
+            
+        }
+        
+        return ZStack {
+            self
+                .accentColor(cursorColor)
+                .fontFromUIFont(font)
+                .padding(.horizontal, leadingPadding)
+        }
+        .frame(height: height)
+        .background(backgroundColor)
+        .cornerRadius(cornerRadius)
+        .overlay(RoundedRectangle(cornerRadius: cornerRadius).stroke(borderColor))
+        .padding(.horizontal, leadingPadding)
+        .shadow(color: shadowColor, radius: 5, x: 0, y: 4)
     }
 }
 
